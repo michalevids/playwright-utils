@@ -1,7 +1,7 @@
 // https://www.tiktok.com/@gnublet/video/7195849224968244523
 
 import { Page } from "playwright";
-import { getAuthenticatedPage } from "./login";
+import { getAuthenticatedPage, saveState } from "./login";
 
 async function postTweet(page: Page, text: string) {
   // open twitter
@@ -24,15 +24,18 @@ async function postTweet(page: Page, text: string) {
 
   // wait for tweet
   await page.waitForURL("https://x.com/home");
+  await page.waitForTimeout(r(1000, 2500));
 
+  await simulateRandomBehaviour(page);
+}
+
+async function simulateRandomBehaviour(page: Page) {
   // simulate scrolling
-  await page.waitForTimeout(r(1000, 2500));
-
-  await page.mouse.wheel(0, r(100, 500));
-  await page.waitForTimeout(r(1000, 2500));
-  await page.mouse.wheel(0, r(100, 500));
-
-  await page.close();
+  const times = r(2, 5);
+  for (let i = 0; i < times; i++) {
+    await page.mouse.wheel(0, r(100, 500));
+    await page.waitForTimeout(r(1000, 2500));
+  }
 }
 
 function r(min: number, max: number): number {
@@ -44,6 +47,7 @@ export async function tweet(text: string) {
 
   console.log("Posting tweet...");
   await postTweet(page, text);
+  await saveState(page);
   await close();
 
   console.log("Done!");

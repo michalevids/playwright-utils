@@ -4,15 +4,7 @@ import "dotenv/config";
 
 import { chromium, devices, Page } from "playwright";
 
-export async function doLogin(page: Page) {
-  const user = process.env.TWITTER_USERNAME;
-  const password = process.env.TWITTER_PASSWORD;
-  if (!user || !password) {
-    throw new Error(
-      "You need to set the TWITTER_USER and TWITTER_PASSWORD env variables"
-    );
-  }
-
+async function doLogin(page: Page, user: string, password: string) {
   await page.goto("https://twitter.com/i/flow/login");
 
   // type username
@@ -49,6 +41,7 @@ export async function getUnauthenticatedPage() {
     page,
     close: async () => {
       await page.close();
+      await context.close();
       await browser.close();
     },
   };
@@ -70,16 +63,29 @@ export async function getAuthenticatedPage() {
     page,
     close: async () => {
       await page.close();
+      await context.close();
       await browser.close();
     },
   };
 }
 
+export async function saveState(page: Page) {
+  return page.context().storageState({ path: authFile });
+}
+
 export async function login() {
+  const user = process.env.TWITTER_USERNAME;
+  const password = process.env.TWITTER_PASSWORD;
+  if (!user || !password) {
+    throw new Error(
+      "You need to set the TWITTER_USER and TWITTER_PASSWORD env variables"
+    );
+  }
+
   const { page, close } = await getUnauthenticatedPage();
 
   console.log("Logging in...");
-  await doLogin(page);
+  await doLogin(page, user, password);
 
   console.log("Saving auth...");
   await page.context().storageState({ path: authFile });
