@@ -2,13 +2,11 @@
 
 import { Page } from "playwright";
 import { getAuthenticatedPage, saveState } from "./login";
+import { r } from "../utils";
+import { goHome } from "./behaviors/go-home";
 
 async function postTweet(page: Page, text: string) {
-  // open twitter
-  await page.goto("https://x.com/home");
-
-  // click away the cookie banner
-  await page.click("//span[contains(text(), 'Refuse non-essential cookies')]");
+  await goHome(page);
 
   // click tweet
   await page.click("a[href='/compose/post']");
@@ -36,10 +34,6 @@ async function simulateRandomBehaviour(page: Page) {
     await page.mouse.wheel(0, r(100, 500));
     await page.waitForTimeout(r(1000, 2500));
   }
-}
-
-function r(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export async function tweet(text: string) {

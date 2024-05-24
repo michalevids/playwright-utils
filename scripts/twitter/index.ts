@@ -1,3 +1,4 @@
+import { followFromFollowing } from "./follow-from-following";
 import { login } from "./login";
 import { tweet } from "./tweet";
 
@@ -11,8 +12,8 @@ import { tweet } from "./tweet";
     case "tweet":
       await tweet(params[0]);
       break;
-    case "test":
-      console.log("Test", ...params);
+    case "follow-from-following":
+      await followFromFollowing();
       break;
     default:
       console.log("Unknown command");
