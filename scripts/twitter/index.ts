@@ -1,5 +1,6 @@
 import { followFromFollowing } from "./follow-from-following";
 import { login } from "./login";
+import { thread } from "./thread";
 import { tweet } from "./tweet";
 
 (async () => {
@@ -14,6 +15,9 @@ import { tweet } from "./tweet";
       break;
     case "follow-from-following":
       await followFromFollowing();
+      break;
+    case "thread":
+      await thread();
       break;
     default:
       console.log("Unknown command");
