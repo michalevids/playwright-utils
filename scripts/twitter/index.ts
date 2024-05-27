@@ -1,4 +1,5 @@
 import { followFromFollowing } from "./follow-from-following";
+import { likeFromExplore } from "./like-from-explore";
 import { login } from "./login";
 import { thread } from "./thread";
 import { tweet } from "./tweet";
@@ -18,6 +19,9 @@ import { tweet } from "./tweet";
       break;
     case "thread":
       await thread();
+      break;
+    case "like-from-explore":
+      await likeFromExplore(params[0]);
       break;
     default:
       console.log("Unknown command");
